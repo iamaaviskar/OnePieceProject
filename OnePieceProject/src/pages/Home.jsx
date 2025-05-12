@@ -21,7 +21,7 @@ const Home = () => {
       </header>
 
       <main className="flex-1 container mx-auto p-5">
-        {user ? (
+        {user && (
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-3">
               Welcome back, {user.username}!
@@ -36,29 +36,6 @@ const Home = () => {
             >
               Go to Dashboard
             </button>
-          </div>
-        ) : (
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-3">
-              Welcome to My Awesome App!
-            </h2>
-            <p className="text-gray-700 mb-5">
-              Sign up to unlock amazing features and start your journey with us.
-            </p>
-            <div className="space-x-3">
-              <button
-                className="bg-green-500 text-white p-3 rounded-lg shadow hover:bg-green-600"
-                onClick={() => alert("Navigating to Sign Up...")}
-              >
-                Sign Up
-              </button>
-              <button
-                className="bg-gray-500 text-white p-3 rounded-lg shadow hover:bg-gray-600"
-                onClick={() => alert("Navigating to Login...")}
-              >
-                Login
-              </button>
-            </div>
           </div>
         )}
       </main>
