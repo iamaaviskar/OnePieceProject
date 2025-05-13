@@ -118,7 +118,7 @@ const Home = () => {
         >
           ⚓ Ahoy,{" "}
           <span className="text-[#F1FAEE]">{user?.username || "Mugiwara"}</span>
-          ! Welcome aboard the <span className="italic">Going Merry</span>!
+          ! Welcome aboard the <span className="italic">Thousand Sunny</span>!
         </p>
       </motion.div>
 
