@@ -3,13 +3,15 @@ import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { useState, useContext, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const RegistrationForm = () => {
   const { register, handleSubmit, watch } = useForm();
   const { authenticate } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
-
   const navigate = useNavigate();
+
+  const pirateFont = { fontFamily: "'Pirata One', cursive" };
 
   useEffect(() => {
     const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
@@ -18,15 +20,18 @@ const RegistrationForm = () => {
 
   const onSubmit = (data) => {
     try {
-      console.log(data);
-
       if (users.some((u) => u.username === data.username)) {
-        toast.error("Username already exists");
+        toast.error("This pirate name be taken already!");
         return;
       }
 
       if (users.some((u) => u.email === data.email)) {
-        toast.error("Email already exists");
+        toast.error("This message in a bottle already arrived!");
+        return;
+      }
+
+      if (data.password !== data.confirmPassword) {
+        toast.error("The secret codes don't match, matey!");
         return;
       }
 
@@ -41,112 +46,173 @@ const RegistrationForm = () => {
       localStorage.setItem("currentUser", JSON.stringify(newUser));
       setUsers(updatedUsers);
 
-      toast.success("User registered successfully!");
+      toast.success("Welcome to the crew, matey!");
       setTimeout(() => {
         authenticate({ username: newUser.username, email: newUser.email });
       }, 1500);
     } catch (error) {
       console.error("Registration failed:", error);
-      toast.error("Failed to save user data");
+      toast.error("Stormy seas! Failed to register.");
     }
   };
+
   function onError(errors) {
     Object.values(errors).forEach((error) => {
       toast.error(error.message, { closeOnClick: true });
     });
   }
 
+  const JollyRoger = () => (
+    <svg
+      width="60"
+      height="60"
+      viewBox="0 0 60 60"
+      className="mx-auto mb-2"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="30"
+        cy="30"
+        r="15"
+        fill="#fff"
+        stroke="#1D3557"
+        strokeWidth="2"
+      />
+      <ellipse cx="25" cy="30" rx="2" ry="3" fill="#1D3557" />
+      <ellipse cx="35" cy="30" rx="2" ry="3" fill="#1D3557" />
+      <path
+        d="M25 38 Q30 42 35 38"
+        stroke="#1D3557"
+        strokeWidth="2"
+        fill="none"
+      />
+      <rect
+        x="8"
+        y="28"
+        width="44"
+        height="4"
+        rx="2"
+        fill="#fff"
+        stroke="#1D3557"
+        strokeWidth="2"
+        transform="rotate(20 30 30)"
+      />
+      <rect
+        x="8"
+        y="28"
+        width="44"
+        height="4"
+        rx="2"
+        fill="#fff"
+        stroke="#1D3557"
+        strokeWidth="2"
+        transform="rotate(-20 30 30)"
+      />
+    </svg>
+  );
+
   return (
     <>
       <ToastContainer />
-      <div className="flex justify-center items-center min-h-screen ">
-        <form
-          onSubmit={handleSubmit(onSubmit, onError)}
-          className="bg-white border-2  p-8 rounded-xl shadow-lg w-full max-w-md"
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-[#1D3557] via-[#457B9D] to-[#A8DADC]">
+        <motion.div
+          className="absolute top-8 text-[#F1FAEE] font-bold bg-[#1D3557] bg-opacity-80 px-6 py-3 rounded-xl shadow-lg border-2 border-[#457B9D]"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          style={pirateFont}
         >
-          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-            Register
-          </h1>
-          <div className="mb-4">
+          🏴‍☠️ "Join our mighty pirate crew! Register to set sail!"
+        </motion.div>
+
+        <motion.div
+          className="bg-[#457B9D] border-4 border-[#A8DADC] p-8 rounded-3xl shadow-2xl w-full max-w-md"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 80, delay: 0.5 }}
+        >
+          <JollyRoger />
+
+          <form
+            onSubmit={handleSubmit(onSubmit, onError)}
+            className="space-y-4"
+          >
+            <h1
+              className="text-3xl font-bold text-center text-[#F1FAEE] mb-6"
+              style={pirateFont}
+            >
+              Join the Crew!
+            </h1>
+
             <input
               type="text"
               {...register("username", {
-                required: "Username is required",
-                minLength: {
-                  value: 3,
-                  message: "Username must be at least 3 characters long",
-                },
+                required: "Pirate name be required!",
               })}
-              placeholder="Username"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-300"
+              placeholder="Pirate Name"
+              className="w-full px-4 py-3 border-2 border-[#A8DADC] rounded-md bg-[#1D3557] text-[#F1FAEE] font-semibold"
+              style={pirateFont}
             />
-          </div>
 
-          <div className="mb-4">
             <input
               type="email"
               {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email format",
-                },
+                required: "Message bottle address be required!",
               })}
-              placeholder="Email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-300"
+              placeholder="Message Bottle Address"
+              className="w-full px-4 py-3 border-2 border-[#A8DADC] rounded-md bg-[#1D3557] text-[#F1FAEE] font-semibold"
+              style={pirateFont}
             />
-          </div>
 
-          <div className="mb-4">
             <input
               type="password"
               {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters long",
-                },
+                required: "Secret code be required!",
               })}
-              placeholder="Password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-300"
+              placeholder="Secret Code"
+              className="w-full px-4 py-3 border-2 border-[#A8DADC] rounded-md bg-[#1D3557] text-[#F1FAEE] font-semibold"
+              style={pirateFont}
             />
-          </div>
 
-          <div className="mb-4">
             <input
               type="password"
               {...register("confirmPassword", {
-                required: "Confirm Password is required",
-                validate: (value) =>
-                  value === watch("password") || "Passwords do not match",
+                required: "Confirm your secret code!",
               })}
-              placeholder="Confirm Password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-300"
+              placeholder="Confirm Secret Code"
+              className="w-full px-4 py-3 border-2 border-[#A8DADC] rounded-md bg-[#1D3557] text-[#F1FAEE] font-semibold"
+              style={pirateFont}
             />
-          </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition duration-200 cursor-pointer"
-          >
-            Register
-          </button>
+            <motion.button
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#457B9D] to-[#A8DADC] text-[#1D3557] font-bold py-3 rounded-xl shadow-lg border-2 border-[#F1FAEE]"
+              whileHover={{
+                scale: 1.05,
+                y: -3,
+                boxShadow: "0 8px 24px #A8DADC",
+              }}
+              style={pirateFont}
+            >
+              🏴‍☠️ Join the Crew!
+            </motion.button>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-black">
-              Already registered?{" "}
-              <button
-                onClick={() => {
-                  navigate("/login");
-                }}
-                type="button"
-                className="text-gray-700 hover:underline font-bold"
-              >
-                Log in
-              </button>
-            </p>
-          </div>
-        </form>
+            <div className="text-center mt-4">
+              <p className="text-[#F1FAEE]" style={pirateFont}>
+                Already a pirate?{" "}
+                <button
+                  onClick={() => navigate("/login")}
+                  type="button"
+                  className="text-[#A8DADC] font-bold hover:underline cursor-pointer"
+                  style={pirateFont}
+                >
+                  Board the Ship!
+                </button>
+              </p>
+            </div>
+          </form>
+        </motion.div>
       </div>
     </>
   );
